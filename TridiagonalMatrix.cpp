@@ -15,5 +15,5 @@ long double* TridiagonalMatrix::solveTriMat(int n, long double* A, long double* 
 	if (st == 0) {
 
 	}
-	else return; //komunikat
+	else return 0; //komunikat
 }

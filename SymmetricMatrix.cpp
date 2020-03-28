@@ -2,26 +2,15 @@
 
 bool SymmetricMatrix::checkSymmetry(int n, long double** A)
 {
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			if (i < j) {
-				if (A[i][j] != A[j][i]) {
+				if (A[i][j] != A[j][i]) 
 					return false;
-				}
 			}
 		}
 	}
 	return true;
-}
-
-bool SymmetricMatrix::checkDeterminant(int n, long double** A)
-{
-	int determinant = 1;  //dodac obliczanie wyznacznika
-	if (determinant != 0) 
-		return true;
-	else 
-		return false;
 }
 
 void SymmetricMatrix::createMatrixLD(int n, long double** A, long double** L, long double* D)
@@ -58,7 +47,7 @@ void SymmetricMatrix::createMatrixLD(int n, long double** A, long double** L, lo
 	}
 }
 
-long double* SymmetricMatrix::solveSymMat(int n, long double** A, long double* B, long double* X)
+void SymmetricMatrix::solveSymMat(int n, long double** A, long double* B, long double* X)
 {
 	int st;
 	long double sum, sum2;
@@ -104,8 +93,7 @@ long double* SymmetricMatrix::solveSymMat(int n, long double** A, long double* B
 		delete[] D;
 
 	}
-	else 
-		return 0; //zrobic komunikat
+	//else zrobic komunikat
 
 
 }

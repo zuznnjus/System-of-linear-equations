@@ -1,14 +1,12 @@
 #include "TridiagonalMatrix.h"
 
-long double* TridiagonalMatrix::solveTriMat(int n, long double* A, long double* B, long double* C, long double* D)
+void TridiagonalMatrix::solveTriMat(int n, long double* A, long double* B, long double* C, long double* D, int& status)
 {
-	int st;
+	if (n < 1) status = 1;
+	//else if (!checkDeterminant(n,)) status = 2;
+	else status = 0;
 
-	if (n < 1) st = 1;
-	//else if () st = ;
-	else st = 0;
-
-	if (st == 0) {
+	if (status == 0) {
 		long double* Y = new long double[n];
 		long double* U = new long double[n - 1];
 
@@ -16,10 +14,10 @@ long double* TridiagonalMatrix::solveTriMat(int n, long double* A, long double* 
 		U[0] = B[0] / A[0];
 
 		for (int i = 1; i < n-1; i++) {
-			U[i] = B[i] / (A[i] - U[i - 1] * C[i]);
+			U[i] = B[i] / (A[i] - U[i - 1] * C[i+1]); //////// C + 1
 		}
 		for (int i = 0; i < n-1; i++) {
-			Y[i + 1] = (D[i + 1] - C[i + 1] * Y[i]) / (A[i + 1] - U[i] * C[i + 1]);
+			Y[i + 1] = (D[i + 1] - C[i + 2] * Y[i]) / (A[i + 1] - U[i] * C[i + 2]); // C powiekszone o 1 - a chyba musi byc pomniejszone
 		}
 
 		D[n - 1] = Y[n - 1];
@@ -30,5 +28,4 @@ long double* TridiagonalMatrix::solveTriMat(int n, long double* A, long double* 
 		delete[] Y;
 		delete[] U;
 	}
-	else return 0; //komunikat
 }

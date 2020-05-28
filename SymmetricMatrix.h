@@ -8,6 +8,6 @@ private:
 	void createMatrixLD(int n, long double** A, long double** L, long double* D);
 
 public:
-	void solveSymMat(int n, long double** A, long double* B, long double* X);
+	void solveSymMat(int n, long double** A, long double* B, long double* X, int& status);
 };
 

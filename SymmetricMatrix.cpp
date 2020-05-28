@@ -47,17 +47,16 @@ void SymmetricMatrix::createMatrixLD(int n, long double** A, long double** L, lo
 	}
 }
 
-void SymmetricMatrix::solveSymMat(int n, long double** A, long double* B, long double* X)
+void SymmetricMatrix::solveSymMat(int n, long double** A, long double* B, long double* X, int& status)
 {
-	int st;
 	long double sum, sum2;
 
-	if (n < 1) st = 1;
-	else if (!checkSymmetry(n,A)) st = 2;
-	else if (!checkDeterminant(n,A)) st = 3;
-	else st = 0;
+	if (n < 1) status = 1;
+	else if (!checkSymmetry(n,A)) status = 2;
+	else if (!checkDeterminant(n,A)) status = 3;
+	else status = 0;
 
-	if (st == 0) {
+	if (status == 0) {
 		long double** L = new long double* [n];
 		for (int i = 0; i < n; ++i)
 			L[i] = new long double[n];
@@ -83,17 +82,13 @@ void SymmetricMatrix::solveSymMat(int n, long double** A, long double* B, long d
 			X[i] = Y[i] / D[i] - sum2;
 		}
 
-
 		for (int i = 0; i < n; i++)
 		{
 			delete[] L[i];
 		}
+
 		delete[] L;
 		delete[] Y;
 		delete[] D;
-
 	}
-	//else zrobic komunikat
-
-
 }

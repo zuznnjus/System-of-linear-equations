@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <DataInput.h>
+#include <DataOutput.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,6 +23,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    int method, arithmetic, n;
+    DataInput *input;
+    DataOutput *output;
 };
 #endif // MAINWINDOW_H

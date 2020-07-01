@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <DataInput.h>
-#include <QGridLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -19,30 +17,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::inputButtonClicked()
 {
-    method = ui->comboBox->currentIndex();
-    arithmetic = ui->comboBox_2->currentIndex();
-
-    switch(method){
-    case 0:
-        if(arithmetic==2){
-
-        }
-        else{
-            new DataInput();
-        }
-        break;
-    case 1:
-        if(arithmetic==2){
-
-        }
-        else{
-
-        }
-        break;
-    }
+    input = new DataInput(ui->comboBox->currentIndex(),
+                  ui->comboBox_2->currentIndex());
 }
 
 void MainWindow::solveButtonClicked()
 {
-
+    output =new DataOutput(ui->comboBox->currentIndex(),
+                   ui->comboBox_2->currentIndex(), input);
 }

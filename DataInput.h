@@ -10,19 +10,21 @@ class DataInput : public QWidget
 {
     Q_OBJECT
 public:
+    DataInput(QWidget *parent = nullptr);
     DataInput(int, int, QWidget *parent = nullptr);
 
-    QLineEdit *size;
+    QLineEdit *sizeN;
     QVector<QLineEdit*> matrixLeft;
     QVector<QLineEdit*> matrixRight;
     QVector<QLineEdit*> vectorLeft;
     QVector<QLineEdit*> vectorRight;
+    int n;
 
 private slots:
     void input();
 
 private:
-    int n, method, arithmetic;
+    int method, arithmetic;
     QWidget *widget;
     QGridLayout *inputLayout;
 

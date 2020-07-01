@@ -17,9 +17,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     DataInput.cpp \
+    DataOutput.cpp \
     Interval.cpp \
-    SymMatrixInput.cpp \
-    SymMatrixOutput.cpp \
     SymmetricMatrix.cpp \
     TridiagonalMatrix.cpp \
     main.cpp \
@@ -27,9 +26,8 @@ SOURCES += \
 
 HEADERS += \
     DataInput.h \
+    DataOutput.h \
     Interval.h \
-    SymMatrixInput.h \
-    SymMatrixOutput.h \
     SymmetricMatrix.h \
     TridiagonalMatrix.h \
     mainwindow.h

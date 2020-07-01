@@ -3,6 +3,10 @@
 #include <QPushButton>
 #include <QScrollArea>
 
+DataInput::DataInput(QWidget *parent): QWidget(parent)
+{
+}
+
 DataInput::DataInput(int method, int arithmetic, QWidget *parent): QWidget(parent)
 {
     this->method = method;
@@ -11,9 +15,9 @@ DataInput::DataInput(int method, int arithmetic, QWidget *parent): QWidget(paren
     QGridLayout *layout = new QGridLayout;
 
     QLabel *sizeLabel = new QLabel(tr("Rozmiar n:"));
-    size = new QLineEdit();
+    sizeN = new QLineEdit();
     layout->addWidget(sizeLabel, 0, 0);
-    layout->addWidget(size, 0, 1);
+    layout->addWidget(sizeN, 0, 1);
 
     QPushButton *submitButton = new QPushButton("Zatwierdź");
     layout->addWidget(submitButton, 1, 1);
@@ -35,7 +39,7 @@ void DataInput::input()
     //scroller->setWidget(widget);
     //layout->addWidget(scroller);
 
-    n = size->text().toInt();
+    n = sizeN->text().toInt();
 
     switch(method){
         case 0:
@@ -61,13 +65,14 @@ void DataInput::input()
 
 void DataInput::matrixInput()
 {
+    QLabel *matrixLabel;
     for (int i = 0; i < n*n; i++){
-        QLabel *matrixLabel = new QLabel(QString("Element macierzy: A [%1][%2]").arg(i/n).arg(i%n));
-        matrixLeft.append(new QLineEdit());
+        matrixLabel = new QLabel(QString("Element macierzy: A [%1][%2]").arg(i/n).arg(i%n));
+        matrixLeft.push_back(new QLineEdit());
         inputLayout->addWidget(matrixLabel, i, 0);
         inputLayout->addWidget(matrixLeft.last(), i, 1);
         if (arithmetic == 2){
-            matrixRight.append(new QLineEdit());
+            matrixRight.push_back(new QLineEdit());
             inputLayout->addWidget(matrixRight.last(), i, 2);
         }
     }
@@ -75,13 +80,14 @@ void DataInput::matrixInput()
 
 void DataInput::vectorInput(QString vectorName, int startAt)
 {
+    QLabel *vectorLabel;
     for (int i = 0; i < n; i++){
-        QLabel *vectorLabel = new QLabel(QString("Element wektora: %1 [%2]").arg(vectorName).arg(i));
-        vectorLeft.append(new QLineEdit());
+        vectorLabel = new QLabel(QString("Element wektora: %1 [%2]").arg(vectorName).arg(i));
+        vectorLeft.push_back(new QLineEdit());
         inputLayout->addWidget(vectorLabel, startAt + i, 0);
         inputLayout->addWidget(vectorLeft.last(), startAt + i, 1);
         if (arithmetic == 2){
-            vectorRight.append(new QLineEdit());
+            vectorRight.push_back(new QLineEdit());
             inputLayout->addWidget(vectorRight.last(), startAt + i, 2);
         }
     }

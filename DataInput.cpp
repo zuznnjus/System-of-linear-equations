@@ -3,10 +3,6 @@
 #include <QPushButton>
 #include <QScrollArea>
 
-DataInput::DataInput(QWidget *parent): QWidget(parent)
-{
-}
-
 DataInput::DataInput(int method, int arithmetic, QWidget *parent): QWidget(parent)
 {
     this->method = method;
@@ -44,13 +40,13 @@ void DataInput::input()
     switch(method){
         case 0:
             matrixInput();
-            vectorInput("B",n*n);
+            vectorInput("B", n*n, n, 0);
             break;
         case 1:
-            vectorInput("A",0);
-            vectorInput("B",n);
-            vectorInput("C",2*n);
-            vectorInput("D",3*n);
+            vectorInput("A", 0, n, 0);
+            vectorInput("B", n, n-1, 0);
+            vectorInput("C", 2*n-1, n-1, 1);
+            vectorInput("D", 3*n-2, n, 0);
             break;
     }
 
@@ -78,11 +74,11 @@ void DataInput::matrixInput()
     }
 }
 
-void DataInput::vectorInput(QString vectorName, int startAt)
+void DataInput::vectorInput(QString vectorName, int startAt, int vectorSize, int x)
 {
     QLabel *vectorLabel;
-    for (int i = 0; i < n; i++){
-        vectorLabel = new QLabel(QString("Element wektora: %1 [%2]").arg(vectorName).arg(i));
+    for (int i = 0; i < vectorSize; i++){
+        vectorLabel = new QLabel(QString("Element wektora: %1 [%2]").arg(vectorName).arg(i+x));
         vectorLeft.push_back(new QLineEdit());
         inputLayout->addWidget(vectorLabel, startAt + i, 0);
         inputLayout->addWidget(vectorLeft.last(), startAt + i, 1);

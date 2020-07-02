@@ -1,9 +1,64 @@
 #pragma once
-#include "Matrix.h"
+#include "Interval.h"
+#include <QVector>
 
-class TridiagonalMatrix: public Matrix
+template <typename T>
+class TridiagonalMatrix
 {
+    repr_t getRepr(const float&);
+    repr_t getRepr(const Interval<long double>&);
 public:
-	void solveTriMat(int n, long double* A, long double* B, long double* C, long double* D, int& status);
+    void solveTriMatrix(const int&, T*, T*, T*, T*, QVector<repr_t>&, int&);
 };
 
+template<typename T>
+repr_t TridiagonalMatrix<T>::getRepr(const float &value)
+{
+    return {std::to_string(value), "", ""};
+}
+
+template<typename T>
+repr_t TridiagonalMatrix<T>::getRepr(const Interval<long double> &value)
+{
+    return value.getRepresentation();
+}
+
+template<typename T>
+void TridiagonalMatrix<T>::solveTriMatrix(const int& n, T* a, T* b, T* c, T* d, QVector<repr_t>& result, int& status)
+{
+	bool determinant = true;
+	//TODO implenetacja wyznacznika
+
+	if (n < 1) status = 1;
+	else if (!determinant) status = 2;
+	else status = 0;
+
+	if (status == 0) {
+		T* y = new T[n];
+		T* u = new T[n - 1];
+
+		y[0] = d[0] / a[0];
+		u[0] = b[0] / a[0];
+
+		for (int i = 1; i < n - 1; ++i) {
+			u[i] = b[i] / (a[i] - u[i - 1] * c[i-1]);
+		}
+
+		for (int i = 0; i < n - 1; ++i) {
+			y[i + 1] = (d[i + 1] - c[i] * y[i]) / (a[i + 1] - u[i] * c[i]); 
+		}
+
+		d[n - 1] = y[n - 1];
+
+		for (int i = n - 2; i >= 0; --i) {
+			d[i] = y[i] - u[i] * d[i + 1];
+		}
+
+        for (int i = 0; i < n; ++i) {
+            result.push_back(getRepr(d[i]));
+        }
+
+		delete[] y;
+		delete[] u;
+	}
+}

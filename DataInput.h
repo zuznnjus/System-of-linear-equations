@@ -10,7 +10,6 @@ class DataInput : public QWidget
 {
     Q_OBJECT
 public:
-    DataInput(QWidget *parent = nullptr);
     DataInput(int, int, QWidget *parent = nullptr);
 
     QLineEdit *sizeN;
@@ -29,7 +28,7 @@ private:
     QGridLayout *inputLayout;
 
     void matrixInput();
-    void vectorInput(QString, int);
+    void vectorInput(QString, int, int, int);
 };
 
 #endif // DATAINPUT_H

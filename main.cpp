@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <TridiagonalMatrix.h>
+#include <SymmetricMatrix.h>
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -43,6 +44,31 @@ int main(int argc, char *argv[])
         std::cout<<std::fixed<<d[i].getRepresentation()[0]<<",   "<<
         d[i].getRepresentation()[1]<<",   "<<
         d[i].getRepresentation()[2]<<std::endl;
+    }*/
+
+    /*int n = 3;
+    int status;
+    float** a = new float* [n];
+    for (int i = 0; i < n; ++i)
+        a[i] = new float[n];
+    a[0][0]=2;
+    a[0][1]=1;
+    a[0][2]=2;
+    a[1][0]=1;
+    a[1][1]=2;
+    a[1][2]=-1;
+    a[2][0]=2;
+    a[2][1]=-1;
+    a[2][2]=-2;
+    float b[] = {1,2,0};
+    float *x = new float[3];
+    QVector<repr_t> res;
+    SymmetricMatrix<float>* result = new SymmetricMatrix<float>();
+    result->solveSymMatrix(n,a,b,x,res,status);
+
+    for(int i=0;i<n;i++){
+        repr_t tmp = res.takeFirst();
+        std::cout<<tmp[0]<<std::endl;
     }*/
 }
 

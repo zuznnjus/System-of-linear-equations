@@ -45,7 +45,40 @@ void SymmetricMatrix<T>::solveSymMatrix(const int& n, T** a, T* b, T* x, QVector
         }
     }
 
-    //TODO implementacja wyznacznika
+    float sumTmp, sumTmp2; /* T */
+    T** L = new T* [n];
+    for (int i = 0; i < n; ++i)
+        L[i] = new T[n];
+
+    T* D = new T[n];
+    T* y = new T[n];
+
+    T** c = new T* [n];
+    for (int i = 0; i < n; ++i)
+        c[i] = new T[n];
+
+    D[0] = a[0][0];
+    if(D[0] == 0)
+        determinant = false;
+
+    for (int i = 1; i < n; ++i) {
+        for (int j = 0; j < i; ++j) {
+            sumTmp = 0;
+            for (int k = 0; k < j; ++k) {
+                sumTmp += c[i][k] * L[j][k];
+            }
+            L[i][j] = (a[i][j] - sumTmp) / D[j];
+            c[i][j] = D[j] * L[i][j];
+        }
+        sumTmp2 = 0;
+        for (int k = 0; k < i; ++k) {
+            sumTmp2 += c[i][k] * L[i][k];
+        }
+        D[i] = a[i][i] - sumTmp2;
+        if(D[i] == 0)
+            determinant = false;
+    }
+
 
     if (n < 1) status = 1;
     else if (!symmetry) status = 2;
@@ -53,36 +86,7 @@ void SymmetricMatrix<T>::solveSymMatrix(const int& n, T** a, T* b, T* x, QVector
     else status = 0;
 
     if (status == 0) {
-        long double sum, sum2, sumTmp, sumTmp2;
-
-        T** L = new T* [n];
-        for (int i = 0; i < n; ++i)
-            L[i] = new T[n];
-
-        T* D = new T[n];
-        T* y = new T[n];
-
-        T** c = new T* [n];
-        for (int i = 0; i < n; ++i)
-            c[i] = new T[n];
-
-        D[0] = a[0][0];
-
-        for (int i = 1; i < n; ++i) {
-            for (int j = 0; j < i; ++j) {
-                sumTmp = 0;
-                for (int k = 0; k < j; ++k) {
-                    sumTmp += c[i][k] * L[j][k];
-                }
-                L[i][j] = (a[i][j] - sumTmp) / D[j];
-                c[i][j] = D[j] * L[i][j];
-            }
-            sumTmp2 = 0;
-            for (int k = 0; k < i; ++k) {
-                sumTmp2 += c[i][k] * L[i][k];
-            }
-            D[i] = a[i][i] - sumTmp2;
-        }
+        float sum, sum2;
 
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
@@ -109,27 +113,24 @@ void SymmetricMatrix<T>::solveSymMatrix(const int& n, T** a, T* b, T* x, QVector
 
         for (int i = 0; i < n; ++i)
         {
-            delete[] L[i];
-        }
-
-        for (int i = 0; i < n; ++i)
-        {
-            delete[] c[i];
-        }
-
-        for (int i = 0; i < n; ++i)
-        {
             result.push_back(getRepr(x[i]));
         }
-
-        delete[] L;
-        delete[] c;
-        delete[] y;
-        delete[] D;
     }
+
+    for (int i = 0; i < n; ++i)
+    {
+        delete[] L[i];
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        delete[] c[i];
+    }
+
+    delete[] L;
+    delete[] c;
+    delete[] y;
+    delete[] D;
 }
-
-
-
 
 #endif // SYMMETRICMATRIX_H

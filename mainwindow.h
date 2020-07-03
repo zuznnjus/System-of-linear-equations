@@ -25,5 +25,6 @@ private:
     Ui::MainWindow *ui;
     DataInput *input;
     DataOutput *output;
+    bool checkInput();
 };
 #endif // MAINWINDOW_H

@@ -43,6 +43,7 @@ void DataOutput::prepareSymMatData()
             for (int i = 0; i < n; ++i)
                 if(!input->vectorLeft.isEmpty()){
                     b[i] = input->vectorLeft.takeFirst()->text().toFloat();
+
                     for (int j = 0; j < n; ++j)
                         if (!input->matrixLeft.isEmpty())
                             a[i][j] = input->matrixLeft.takeFirst()->text().toFloat();
@@ -52,8 +53,10 @@ void DataOutput::prepareSymMatData()
             symMat->solveSymMatrix(n, a, b, x, result, status);
             break;
             }
-        //default:
-            /*{
+
+        case 1:
+            {
+            QString tmp;
             iarithm_t** a = new iarithm_t*[n];
             for (int i = 0; i < n; ++i)
                 a[i] = new iarithm_t[n];
@@ -63,17 +66,45 @@ void DataOutput::prepareSymMatData()
 
             for (int i = 0; i < n; ++i)
                 if(!input->vectorLeft.isEmpty()){
-                    b[i] = input->vectorLeft.takeFirst()->text();
-                    if(arithmetic == 2)
+                    tmp = input->vectorLeft.takeFirst()->text();
+                    b[i] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
 
                     for (int j = 0; j < n; ++j)
-                        if (!input->matrixLeft.isEmpty())
-                            a[i][j] = input->matrixLeft.takeFirst()->text().toFloat();
+                        if (!input->matrixLeft.isEmpty()){
+                            tmp = input->matrixLeft.takeFirst()->text();
+                            a[i][j] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
+                    }
                 }
 
-
+            SymmetricMatrix<iarithm_t> *symMatInt = new SymmetricMatrix<iarithm_t>();
+            symMatInt->solveSymMatrix(n, a, b, x, result, status);
             break;
-            }*/
+            }
+        case 2:
+        {
+            iarithm_t** a = new iarithm_t*[n];
+            for (int i = 0; i < n; ++i)
+                a[i] = new iarithm_t[n];
+
+            iarithm_t* b = new iarithm_t[n];
+            iarithm_t* x = new iarithm_t[n];
+
+            for (int i = 0; i < n; ++i)
+                if(!input->vectorLeft.isEmpty()){
+                    b[i] = iarithm_t(input->vectorLeft.takeFirst()->text().toStdString(),
+                                     input->vectorRight.takeFirst()->text().toStdString(), std::stold);
+
+                    for (int j = 0; j < n; ++j)
+                        if (!input->matrixLeft.isEmpty()){
+                            a[i][j] = iarithm_t(input->matrixLeft.takeFirst()->text().toStdString(),
+                                                input->matrixRight.takeFirst()->text().toStdString(), std::stold);
+                    }
+                }
+
+            SymmetricMatrix<iarithm_t> *symMat = new SymmetricMatrix<iarithm_t>();
+            symMat->solveSymMatrix(n, a, b, x, result, status);
+            break;
+        }
     }
 }
 
@@ -101,6 +132,14 @@ void DataOutput::prepareTriMatData()
         triMat->solveTriMatrix(n, a, b, c, d, result, status);
         break;
         }
+    case 1:
+        {
+        break;
+        }
+    case 2:
+        {
+        break;
+        }
     }
 }
 
@@ -109,19 +148,33 @@ void DataOutput::showResult()
     QLabel *label;
     QLabel *resultLabel;
     repr_t tmp;
-    if(!result.isEmpty()){
-    for (int i = 0; i < n; ++i){
-        label = new QLabel(QString("Wektor wynikowy: x[%1] =").arg(i));
-        layout->addWidget(label, i, 0);
-        tmp = result.takeFirst();
-        resultLabel = new QLabel(QString("%1").arg(QString::fromStdString(tmp[0])));
-        layout->addWidget(resultLabel, i, 1);
+    QString text;
+
+    if(!result.isEmpty() || status != 0){
+
+        for (int i = 0; i < n; ++i){
+            if (arithmetic == 0)
+                text = "x[%1] =";
+            else
+                text = "x[%1] = [";
+            label = new QLabel(text.arg(i));
+            layout->addWidget(label, i, 0);
+            tmp = result.takeFirst();
+            resultLabel = new QLabel(QString("%1").arg(QString::fromStdString(tmp[0])));
+            layout->addWidget(resultLabel, i, 1);
+
+            if(arithmetic == 1 || arithmetic == 2){
+                resultLabel = new QLabel(QString(",  %1 ]").arg(QString::fromStdString(tmp[1])));
+                layout->addWidget(resultLabel, i, 2);
+                resultLabel = new QLabel(QString(",  szerokość(x[%1]) = %2").arg(i).arg(QString::fromStdString(tmp[2])));
+                layout->addWidget(resultLabel, i, 3);
+            }
         }
+        label = new QLabel(QString("status = %1").arg(status));
+        layout->addWidget(label, n + 1, 0);
     }
     else {
          label = new QLabel(QString("Brak wyniku: status = %1").arg(status));
          layout->addWidget(label, 0, 0);
     }
 }
-
-

@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QGridLayout>
+#include <QPushButton>
 
 class DataInput : public QWidget
 {
@@ -17,15 +18,16 @@ public:
     QVector<QLineEdit*> matrixRight;
     QVector<QLineEdit*> vectorLeft;
     QVector<QLineEdit*> vectorRight;
-    int n;
+    int n, method, arithmetic;
 
 private slots:
     void input();
+    void checkSizeN();
 
 private:
-    int method, arithmetic;
     QWidget *widget;
     QGridLayout *inputLayout;
+    QPushButton *sizeSubmitButton;
 
     void matrixInput();
     void vectorInput(QString, int, int, int);

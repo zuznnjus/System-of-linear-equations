@@ -1,7 +1,7 @@
 #include "DataInput.h"
 #include <QLabel>
-#include <QPushButton>
 #include <QScrollArea>
+#include <QMessageBox>
 
 DataInput::DataInput(int method, int arithmetic, QWidget *parent): QWidget(parent)
 {
@@ -15,15 +15,26 @@ DataInput::DataInput(int method, int arithmetic, QWidget *parent): QWidget(paren
     layout->addWidget(sizeLabel, 0, 0);
     layout->addWidget(sizeN, 0, 1);
 
-    QPushButton *submitButton = new QPushButton("Zatwierdź");
-    layout->addWidget(submitButton, 1, 1);
+    sizeSubmitButton = new QPushButton("Zatwierdź");
+    layout->addWidget(sizeSubmitButton, 1, 1);
 
-    connect(submitButton, SIGNAL(clicked()),this,SLOT(input()));
-    connect(submitButton, SIGNAL(clicked()),this,SLOT(hide()));
+    connect(sizeSubmitButton, SIGNAL(clicked()),this,SLOT(checkSizeN()));
 
     setWindowTitle("Wprowadzanie danych");
     this->setLayout(layout);
     this->show();
+}
+
+void DataInput::checkSizeN()
+{
+    n = sizeN->text().toInt();
+    if (n < 1){
+        QMessageBox::warning(this, "Błąd","n musi być liczbą całkowitą dodatnią");
+    }
+    else {
+    connect(sizeSubmitButton, SIGNAL(clicked()),this,SLOT(input()));
+    connect(sizeSubmitButton, SIGNAL(clicked()),this,SLOT(hide()));
+    }
 }
 
 void DataInput::input()
@@ -35,7 +46,7 @@ void DataInput::input()
     //scroller->setWidget(widget);
     //layout->addWidget(scroller);
 
-    n = sizeN->text().toInt();
+
 
     switch(method){
         case 0:
@@ -59,6 +70,7 @@ void DataInput::input()
     widget->show();
 }
 
+
 void DataInput::matrixInput()
 {
     QLabel *matrixLabel;
@@ -67,6 +79,7 @@ void DataInput::matrixInput()
         matrixLeft.push_back(new QLineEdit());
         inputLayout->addWidget(matrixLabel, i, 0);
         inputLayout->addWidget(matrixLeft.last(), i, 1);
+
         if (arithmetic == 2){
             matrixRight.push_back(new QLineEdit());
             inputLayout->addWidget(matrixRight.last(), i, 2);
@@ -82,6 +95,7 @@ void DataInput::vectorInput(QString vectorName, int startAt, int vectorSize, int
         vectorLeft.push_back(new QLineEdit());
         inputLayout->addWidget(vectorLabel, startAt + i, 0);
         inputLayout->addWidget(vectorLeft.last(), startAt + i, 1);
+
         if (arithmetic == 2){
             vectorRight.push_back(new QLineEdit());
             inputLayout->addWidget(vectorRight.last(), startAt + i, 2);

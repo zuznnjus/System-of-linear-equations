@@ -26,7 +26,7 @@ repr_t TridiagonalMatrix<T>::getRepr(const Interval<long double> &value)
 template<typename T>
 void TridiagonalMatrix<T>::solveTriMatrix(const int& n, T* a, T* b, T* c, T* d, QVector<repr_t>& result, int& status)
 {
-    bool determinant = true;
+    bool determinantOrMethod = true;
 
     T* y = new T[n];
     T* u = new T[n - 1];
@@ -35,45 +35,51 @@ void TridiagonalMatrix<T>::solveTriMatrix(const int& n, T* a, T* b, T* c, T* d, 
     y[0] = d[0] / a[0];
     u[0] = b[0] / a[0];
 
-    L[0] = d[0]/y[0];
-    if(L[0] == 0){
-        determinant = false;
-    }
+    L[0] = d[0] / y[0];
+    if(L[0] == 0.0)
+        determinantOrMethod = false;
 
     for (int i = 1; i < n - 1; ++i) {
-        u[i] = b[i] / (a[i] - u[i - 1] * c[i-1]);
+        if(a[i] != u[i - 1] * c[i-1])
+            u[i] = b[i] / (a[i] - u[i - 1] * c[i-1]);
+        else{
+            determinantOrMethod = false;
+            break;
+        }
     }
 
     for (int i = 0; i < n - 1; ++i) {
-        if (a[i + 1] == u[i] * c[i]){
-            determinant = false;
+        if(a[i + 1] != u[i] * c[i])
+            y[i + 1] = (d[i + 1] - c[i] * y[i]) / (a[i + 1] - u[i] * c[i]);
+        else{
+            determinantOrMethod = false;
+            break;
+        }
+
+        if(y[i+1] == 0.0){
+            determinantOrMethod = false;
             break;
         }
         else{
-        y[i + 1] = (d[i + 1] - c[i] * y[i]) / (a[i + 1] - u[i] * c[i]);
-
-        L[i+1] = d[i+1]/y[i+1] - c[i+1];
-        if (L[i+1] == 0){
-            determinant = false;
-            break;
-        }
+            L[i+1] = d[i+1]/y[i+1] - c[i+1];
+            if (L[i+1] == 0.0){
+                determinantOrMethod = false;
+                break;
+            }
         }
     }
 
 	if (n < 1) status = 1;
-	else if (!determinant) status = 2;
+    else if (!determinantOrMethod) status = 2;
 	else status = 0;
 
 	if (status == 0) {
 		d[n - 1] = y[n - 1];
+        for (int i = n - 2; i >= 0; --i)
+            d[i] = y[i] - u[i] * d[i + 1];
 
-		for (int i = n - 2; i >= 0; --i) {
-			d[i] = y[i] - u[i] * d[i + 1];
-		}
-
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; ++i)
             result.push_back(getRepr(d[i]));
-        }
 	}
 
     delete[] y;

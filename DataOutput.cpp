@@ -40,17 +40,20 @@ void DataOutput::prepareSymMatData()
             float* b = new float[n];
             float* x = new float[n];
 
-            for (int i = 0; i < n; ++i)
-                if(!input->vectorLeft.isEmpty()){
+            for (int i = 0; i < n; ++i){
                     b[i] = input->vectorLeft.takeFirst()->text().toFloat();
-
                     for (int j = 0; j < n; ++j)
-                        if (!input->matrixLeft.isEmpty())
                             a[i][j] = input->matrixLeft.takeFirst()->text().toFloat();
                 }
 
             SymmetricMatrix<float> *symMat = new SymmetricMatrix<float>();
             symMat->solveSymMatrix(n, a, b, x, result, status);
+
+            for (int i = 0; i < n; ++i)
+                delete[] a[i];
+            delete[] a;
+            delete[] b;
+            delete[] x;
             break;
             }
 
@@ -64,13 +67,11 @@ void DataOutput::prepareSymMatData()
             iarithm_t* b = new iarithm_t[n];
             iarithm_t* x = new iarithm_t[n];
 
-            for (int i = 0; i < n; ++i)
-                if(!input->vectorLeft.isEmpty()){
+            for (int i = 0; i < n; ++i){
                     tmp = input->vectorLeft.takeFirst()->text();
                     b[i] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
 
-                    for (int j = 0; j < n; ++j)
-                        if (!input->matrixLeft.isEmpty()){
+                    for (int j = 0; j < n; ++j){
                             tmp = input->matrixLeft.takeFirst()->text();
                             a[i][j] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
                     }
@@ -78,8 +79,15 @@ void DataOutput::prepareSymMatData()
 
             SymmetricMatrix<iarithm_t> *symMatInt = new SymmetricMatrix<iarithm_t>();
             symMatInt->solveSymMatrix(n, a, b, x, result, status);
+
+            for (int i = 0; i < n; ++i)
+                delete[] a[i];
+            delete[] a;
+            delete[] b;
+            delete[] x;
             break;
             }
+
         case 2:
         {
             iarithm_t** a = new iarithm_t*[n];
@@ -89,20 +97,23 @@ void DataOutput::prepareSymMatData()
             iarithm_t* b = new iarithm_t[n];
             iarithm_t* x = new iarithm_t[n];
 
-            for (int i = 0; i < n; ++i)
-                if(!input->vectorLeft.isEmpty()){
+            for (int i = 0; i < n; ++i){
                     b[i] = iarithm_t(input->vectorLeft.takeFirst()->text().toStdString(),
                                      input->vectorRight.takeFirst()->text().toStdString(), std::stold);
 
                     for (int j = 0; j < n; ++j)
-                        if (!input->matrixLeft.isEmpty()){
                             a[i][j] = iarithm_t(input->matrixLeft.takeFirst()->text().toStdString(),
                                                 input->matrixRight.takeFirst()->text().toStdString(), std::stold);
-                    }
                 }
 
             SymmetricMatrix<iarithm_t> *symMat = new SymmetricMatrix<iarithm_t>();
             symMat->solveSymMatrix(n, a, b, x, result, status);
+
+            for (int i = 0; i < n; ++i)
+                delete[] a[i];
+            delete[] a;
+            delete[] b;
+            delete[] x;
             break;
         }
     }
@@ -111,35 +122,95 @@ void DataOutput::prepareSymMatData()
 void DataOutput::prepareTriMatData()
 {
     switch(arithmetic){
-    case 0:
-        {
-        float* a = new float[n];
-        float* b = new float[n];
-        float* c = new float[n];
-        float* d = new float[n];
+        case 0:
+            {
+            float* a = new float[n];
+            float* b = new float[n];
+            float* c = new float[n];
+            float* d = new float[n];
 
-        for (int i = 0; i < n; ++i){
-            a[i] = input->vectorLeft.takeFirst()->text().toFloat();
-            d[n-i-1] = input->vectorLeft.takeLast()->text().toFloat();
-        }
+            for (int i = 0; i < n; ++i){
+                a[i] = input->vectorLeft.takeFirst()->text().toFloat();
+                d[n-i-1] = input->vectorLeft.takeLast()->text().toFloat();
+            }
 
-        for (int i = 0; i < n - 1; ++i){
-            b[i] = input->vectorLeft.takeFirst()->text().toFloat();
-            c[n-i-2] = input->vectorLeft.takeLast()->text().toFloat();
-        }
+            for (int i = 0; i < n - 1; ++i){
+                b[i] = input->vectorLeft.takeFirst()->text().toFloat();
+                c[n-i-2] = input->vectorLeft.takeLast()->text().toFloat();
+            }
 
-        TridiagonalMatrix<float> *triMat = new TridiagonalMatrix<float>();
-        triMat->solveTriMatrix(n, a, b, c, d, result, status);
-        break;
-        }
-    case 1:
-        {
-        break;
-        }
-    case 2:
-        {
-        break;
-        }
+            TridiagonalMatrix<float> *triMat = new TridiagonalMatrix<float>();
+            triMat->solveTriMatrix(n, a, b, c, d, result, status);
+            break;
+
+            delete[] a;
+            delete[] b;
+            delete[] c;
+            delete[] d;
+            }
+
+        case 1:
+            {
+            QString tmp;
+            iarithm_t* a = new iarithm_t[n];
+            iarithm_t* b = new iarithm_t[n];
+            iarithm_t* c = new iarithm_t[n];
+            iarithm_t* d = new iarithm_t[n];
+
+            for (int i = 0; i < n; ++i){
+                tmp = input->vectorLeft.takeFirst()->text();
+                a[i] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
+                tmp = input->vectorLeft.takeLast()->text();
+                d[n-i-1] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
+            }
+
+            for (int i = 0; i < n - 1; ++i){
+                tmp = input->vectorLeft.takeFirst()->text();
+                b[i] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
+                tmp = input->vectorLeft.takeLast()->text();
+                c[n-i-2] = iarithm_t(tmp.toStdString(), tmp.toStdString(), std::stold);
+            }
+
+            TridiagonalMatrix<iarithm_t> *triMatInt = new TridiagonalMatrix<iarithm_t>();
+            triMatInt->solveTriMatrix(n, a, b, c, d, result, status);
+
+            delete[] a;
+            delete[] b;
+            delete[] c;
+            delete[] d;
+            break;
+            }
+
+        case 2:
+            {
+            iarithm_t* a = new iarithm_t[n];
+            iarithm_t* b = new iarithm_t[n];
+            iarithm_t* c = new iarithm_t[n];
+            iarithm_t* d = new iarithm_t[n];
+
+            for (int i = 0; i < n; ++i){
+                a[i] = iarithm_t(input->vectorLeft.takeFirst()->text().toStdString(),
+                                 input->vectorRight.takeFirst()->text().toStdString(), std::stold);
+                d[n-i-1] = iarithm_t(input->vectorLeft.takeLast()->text().toStdString(),
+                                     input->vectorRight.takeLast()->text().toStdString(), std::stold);
+            }
+
+            for (int i = 0; i < n - 1; ++i){
+                b[i] = iarithm_t(input->vectorLeft.takeFirst()->text().toStdString(),
+                                 input->vectorRight.takeFirst()->text().toStdString(), std::stold);
+                c[n-i-2] = iarithm_t(input->vectorLeft.takeLast()->text().toStdString(),
+                                     input->vectorRight.takeLast()->text().toStdString(), std::stold);
+            }
+
+            TridiagonalMatrix<iarithm_t> *triMat = new TridiagonalMatrix<iarithm_t>();
+            triMat->solveTriMatrix(n, a, b, c, d, result, status);
+
+            delete[] a;
+            delete[] b;
+            delete[] c;
+            delete[] d;
+            break;
+            }
     }
 }
 
@@ -150,7 +221,7 @@ void DataOutput::showResult()
     repr_t tmp;
     QString text;
 
-    if(!result.isEmpty() || status != 0){
+    if(!result.isEmpty()){
 
         for (int i = 0; i < n; ++i){
             if (arithmetic == 0)

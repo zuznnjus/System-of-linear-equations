@@ -13,6 +13,7 @@ class SymmetricMatrix
     repr_t getRepr(const float&);
     repr_t getRepr(const Interval<long double>&);
 
+
 public:
     void solveSymMatrix(const int&, T**, T*, T*, QVector<repr_t>&, int&);
 };
@@ -45,7 +46,7 @@ void SymmetricMatrix<T>::solveSymMatrix(const int& n, T** a, T* b, T* x, QVector
         }
     }
 
-    float sumTmp, sumTmp2; /* T */
+    T sumTmp, sumTmp2;
     T** L = new T* [n];
     for (int i = 0; i < n; ++i)
         L[i] = new T[n];
@@ -64,16 +65,16 @@ void SymmetricMatrix<T>::solveSymMatrix(const int& n, T** a, T* b, T* x, QVector
     for (int i = 1; i < n; ++i) {
         for (int j = 0; j < i; ++j) {
             sumTmp = 0;
-            for (int k = 0; k < j; ++k) {
+            for (int k = 0; k < j; ++k)
                 sumTmp += c[i][k] * L[j][k];
-            }
+
             L[i][j] = (a[i][j] - sumTmp) / D[j];
             c[i][j] = D[j] * L[i][j];
         }
         sumTmp2 = 0;
-        for (int k = 0; k < i; ++k) {
+        for (int k = 0; k < i; ++k)
             sumTmp2 += c[i][k] * L[i][k];
-        }
+
         D[i] = a[i][i] - sumTmp2;
         if(D[i] == 0)
             determinant = false;
@@ -86,7 +87,7 @@ void SymmetricMatrix<T>::solveSymMatrix(const int& n, T** a, T* b, T* x, QVector
     else status = 0;
 
     if (status == 0) {
-        float sum, sum2;
+        T sum, sum2;
 
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
@@ -97,35 +98,29 @@ void SymmetricMatrix<T>::solveSymMatrix(const int& n, T** a, T* b, T* x, QVector
 
         for (int i = 0; i < n; ++i) {
             sum = 0;
-            for (int j = 0; j < i; ++j) {
+            for (int j = 0; j < i; ++j)
                 sum += L[i][j] * y[j];
-            }
+
             y[i] = b[i] - sum;
         }
 
         for (int i = n - 1; i >= 0; --i) {
             sum2 = 0;
-            for (int j = i + 1; j < n; ++j) {
+            for (int j = i + 1; j < n; ++j)
                 sum2 += L[j][i] * x[j];
-            }
+
             x[i] = y[i] / D[i] - sum2;
         }
 
         for (int i = 0; i < n; ++i)
-        {
-            result.push_back(getRepr(x[i]));
-        }
+            result.push_back(getRepr(x[i]));  
     }
 
     for (int i = 0; i < n; ++i)
-    {
         delete[] L[i];
-    }
 
     for (int i = 0; i < n; ++i)
-    {
         delete[] c[i];
-    }
 
     delete[] L;
     delete[] c;
